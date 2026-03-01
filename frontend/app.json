@@ -1,0 +1,21 @@
+{
+  "expo": {
+    "name": "TDR Notify",
+    "slug": "tdr-notify",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {},
+    "web": {},
+    "extra": {
+      "apiBaseUrl": "http://127.0.0.1:8000",
+      "eas": {
+        "projectId": "c9b35c3f-9d36-4d70-ad54-9c82d1d8affe"
+      }
+    },
+    "owner": "wattech"
+  }
+}
