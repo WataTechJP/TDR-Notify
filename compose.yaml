@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: tdr_notify
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d tdr_notify"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/tdr_notify
+      MONITOR_URL: https://www.tokyodisneyresort.jp/tdr/news/update/
+      MONITOR_SELECTOR: .linkList6.listUpdate ul
+      CHECK_INTERVAL_MINUTES: "60"
+      USER_AGENT: DisneyMonitorBot/1.0
+      REQUEST_TIMEOUT_SECONDS: "5"
+      RANDOM_DELAY_MAX_SECONDS: "30"
+      MAX_CONSECUTIVE_FAILURES: "3"
+      EXPO_PUSH_URL: https://exp.host/--/api/v2/push/send
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
